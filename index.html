@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ANMOL 9X PANNEL - Live Result Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Rajdhani', sans-serif; }
+
+        /* Game Iframe Background */
+        #gameFrameContainer { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+        #gameIframe { width: 100%; height: 100%; border: none; }
+
+        /* Compact Floating Panel */
+        #dragPanel {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            width: 175px;
+            background: linear-gradient(145deg, #05260f, #021407);
+            border: 2px solid #00ff66;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.4), inset 0 0 10px rgba(0, 255, 102, 0.2);
+            padding: 7px;
+            color: #fff;
+            touch-action: none;
+        }
+
+        .panel-top-title {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8.5px;
+            font-weight: 900;
+            color: #00ff66;
+            letter-spacing: 1px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 102, 0.3);
+            margin-bottom: 5px;
+            text-shadow: 0 0 6px rgba(0, 255, 102, 0.6);
+            cursor: move;
+        }
+
+        .panel-status-bar {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3px;
+            border-radius: 6px;
+            font-size: 6.5px;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 5px;
+            color: #aaffcc;
+            border: 1px solid rgba(0,255,102,0.2);
+        }
+
+        .inner-screen {
+            background: rgba(0, 15, 5, 0.95);
+            border: 1px solid rgba(0, 255, 102, 0.4);
+            border-radius: 10px;
+            padding: 7px;
+            position: relative;
+        }
+
+        .signal-lock-text {
+            font-size: 6.5px;
+            font-family: 'Orbitron', sans-serif;
+            color: #00ff66;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .signal-lock-text::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: #00ff66;
+            border-radius: 50%;
+            box-shadow: 0 0 6px #00ff66;
+        }
+
+        .display-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ball-box {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .ball-img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4));
+            animation: popIn 0.3s ease-out;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .result-badge {
+            flex: 1;
+            background: linear-gradient(135deg, #00aa44, #004415);
+            border: 1.5px solid #00ff66;
+            border-radius: 8px;
+            text-align: center;
+            padding: 7px 3px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
+            text-shadow: 0 0 6px rgba(0,255,102,0.8);
+        }
+
+        .panel-footer-info {
+            margin-top: 5px;
+            font-size: 7px;
+            font-family: 'Orbitron', sans-serif;
+            color: #88cc99;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 6px;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 5px 2px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8px;
+            font-weight: 900;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .btn-exec { background: linear-gradient(135deg, #00ff66, #008833); color: #051407; box-shadow: 0 0 8px rgba(0,255,102,0.4); }
+        .btn-close { background: rgba(255, 255, 255, 0.1); color: #aaffcc; border: 1px solid rgba(0,255,102,0.3); }
+
+        /* Adjustable Floating Toggle Ball Icon */
+        #floatingToggleBtn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 100000;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #00ff66, #004415);
+            border: 2px solid #00ff66;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: #000;
+            font-size: 18px;
+            touch-action: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Game Web Iframe -->
+    <div id="gameFrameContainer">
+        <iframe id="gameIframe" src="https://maanwin24.com/register?inviteCode=AEATD8N&from=web"></iframe>
+    </div>
+
+    <!-- Draggable Floating Toggle Ball Icon -->
+    <div id="floatingToggleBtn">
+        <i class="ri-radar-line"></i>
+    </div>
+
+    <!-- ANMOL 9X PANNEL Overlay -->
+    <div id="dragPanel">
+        <div class="panel-top-title" id="panelHeader">ANMOL 9X PANNEL</div>
+        <div class="panel-status-bar">
+            <span>SYS: ON</span>
+            <span>SYNC</span>
+            <span>18ms</span>
+        </div>
+        <div class="inner-screen">
+            <div class="signal-lock-text">LIVE LOCKED</div>
+            <div class="display-row">
+                <div class="ball-box" id="ballContainer">
+                    <div style="font-size: 16px; color: #00ff66; font-family: 'Orbitron';">?</div>
+                </div>
+                <div class="result-badge" id="resText">SCAN</div>
+            </div>
+            <div class="panel-footer-info">
+                <span id="periodText">PRD: ----</span>
+                <span>LIVE</span>
+            </div>
+        </div>
+        <div class="panel-actions">
+            <button class="action-btn btn-exec" onclick="manualSync()">▶ NEXT</button>
+            <button class="action-btn btn-close" onclick="togglePanelVisibility()">✕ HIDE</button>
+        </div>
+    </div>
+
+<script>
+    function clearLogs() {
+        if (typeof console !== 'undefined' && console.clear) {
+            console.clear();
+        }
+    }
+    setInterval(clearLogs, 3000);
+    clearLogs();
+
+    const BALL_IMAGES = {
+        0: 'https://i.postimg.cc/Wzrp0gRV/ball-0-053d2b99.png',
+        1: 'https://i.postimg.cc/Qt7ZzDfk/ball-1-12ea01b7.png',
+        2: 'https://i.postimg.cc/zvSZJjZy/ball-2-7d433738.png',
+        3: 'https://i.postimg.cc/7hyr8Rcv/ball-3-a91cceac.png',
+        4: 'https://i.postimg.cc/WbTc5Qgg/ball-4-cad06388.png',
+        5: 'https://i.postimg.cc/28GRM27J/ball-5-8e182f0c.png',
+        6: 'https://i.postimg.cc/c1QNMsgd/ball-6-44a39882.png',
+        7: 'https://i.postimg.cc/2S5RDhH5/ball-7-c8babe29.png',
+        8: 'https://i.postimg.cc/R03k39x5/ball-8-9d781b7c.png',
+        9: 'https://i.postimg.cc/cL5q4CjB/ball-9-19985870.png'
+    };
+
+    function getSize(num) {
+        return num >= 5 ? "BIG" : "SMALL";
+    }
+
+    // Draggable Main Panel Logic
+    const panel = document.getElementById('dragPanel');
+    const header = document.getElementById('panelHeader');
+    let isDragging = false, startX, startY, initialX = 0, initialY = 0;
+
+    header.addEventListener('touchstart', dragStart, {passive: false});
+    window.addEventListener('touchmove', dragMove, {passive: false});
+    window.addEventListener('touchend', dragEnd);
+    header.addEventListener('mousedown', dragStart);
+    window.addEventListener('mousemove', dragMove);
+    window.addEventListener('mouseup', dragEnd);
+
+    function dragStart(e) {
+        isDragging = true;
+        let clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        let clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+        startX = clientX - initialX;
+        startY = clientY - initialY;
+    }
+
+    function dragMove(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+        let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+        initialX = clientX - startX;
+        initialY = clientY - startY;
+        panel.style.transform = `translate(calc(-50% + ${initialX}px), ${initialY}px)`;
+    }
+
+    function dragEnd() { isDragging = false; }
+
+    // Draggable Floating Toggle Ball Logic
+    const floatBtn = document.getElementById('floatingToggleBtn');
+    let isBtnDragging = false, btnStartX, btnStartY, btnX = 0, btnY = 0;
+
+    floatBtn.addEventListener('touchstart', btnDragStart, {passive: false});
+    window.addEventListener('touchmove', btnDragMove, {passive: false});
+    window.addEventListener('touchend', btnDragEnd);
+    floatBtn.addEventListener('mousedown', btnDragStart);
+    window.addEventListener('mousemove', btnDragMove);
+    window.addEventListener('mouseup', btnDragEnd);
+
+    function btnDragStart(e) {
+        isBtnDragging = true;
+        let clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        let clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+        btnStartX = clientX - btnX;
+        btnStartY = clientY - btnY;
+    }
+
+    function btnDragMove(e) {
+        if (!isBtnDragging) return;
+        e.preventDefault();
+        let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+        let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+        btnX = clientX - btnStartX;
+        btnY = clientY - btnStartY;
+        floatBtn.style.transform = `translate(${btnX}px, ${btnY}px)`;
+    }
+
+    function btnDragEnd(e) {
+        isBtnDragging = false;
+    }
+
+    floatBtn.addEventListener('click', (e) => {
+        togglePanelVisibility();
+    });
+
+    function togglePanelVisibility() {
+        if (panel.style.display === 'none') {
+            panel.style.display = 'block';
+            floatBtn.style.display = 'none';
+        } else {
+            panel.style.display = 'none';
+            floatBtn.style.display = 'flex';
+        }
+    }
+
+    function manualSync() {
+        fetchLatestResult();
+    }
+
+    async function fetchLatestResult() {
+        try {
+            const res = await fetch(`https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json?t=${Date.now()}`);
+            if (!res.ok) return;
+            const data = await res.json();
+            if (data?.data?.list?.length > 0) {
+                const latest = data.data.list[0];
+                const issueNumber = latest.issueNumber; 
+                const number = parseInt(latest.number);  
+                
+                document.getElementById('periodText').innerText = `PRD: ${issueNumber.slice(-4)}`;
+                document.getElementById('resText').innerText = getSize(number);
+                
+                if (BALL_IMAGES[number] !== undefined) {
+                    document.getElementById('ballContainer').innerHTML = `<img src="${BALL_IMAGES[number]}" class="ball-img" alt="Ball ${number}">`;
+                }
+            }
+        } catch (err) {}
+    }
+
+    setInterval(fetchLatestResult, 2000);
+    fetchLatestResult();
+</script>
+
+</body>
+</html>
