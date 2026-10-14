@@ -14,19 +14,19 @@
         #gameFrameContainer { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
         #gameIframe { width: 100%; height: 100%; border: none; }
 
-        /* Compact Floating Panel */
+        /* Compact Floating Panel - Dhani.win Inspired Purple/Gold Theme */
         #dragPanel {
             position: fixed;
             top: 15px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 99999;
-            width: 175px;
-            background: linear-gradient(145deg, #05260f, #021407);
-            border: 2px solid #00ff66;
+            width: 180px;
+            background: linear-gradient(145deg, #231942, #0f0a21);
+            border: 2px solid #ffcc00;
             border-radius: 16px;
-            box-shadow: 0 0 20px rgba(0, 255, 102, 0.4), inset 0 0 10px rgba(0, 255, 102, 0.2);
-            padding: 7px;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.4), inset 0 0 10px rgba(157, 78, 221, 0.3);
+            padding: 8px;
             color: #fff;
             touch-action: none;
         }
@@ -36,33 +36,33 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 8.5px;
             font-weight: 900;
-            color: #00ff66;
+            color: #ffcc00;
             letter-spacing: 1px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 4px;
+            background: rgba(15, 10, 33, 0.8);
+            padding: 5px;
             border-radius: 8px;
-            border: 1px solid rgba(0, 255, 102, 0.3);
+            border: 1px solid rgba(255, 204, 0, 0.3);
             margin-bottom: 5px;
-            text-shadow: 0 0 6px rgba(0, 255, 102, 0.6);
+            text-shadow: 0 0 6px rgba(255, 204, 0, 0.6);
             cursor: move;
         }
 
         .panel-status-bar {
             display: flex;
             justify-content: space-around;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(10, 5, 25, 0.85);
             padding: 3px;
             border-radius: 6px;
             font-size: 6.5px;
             font-family: 'Orbitron', sans-serif;
             margin-bottom: 5px;
-            color: #aaffcc;
-            border: 1px solid rgba(0,255,102,0.2);
+            color: #e0aaff;
+            border: 1px solid rgba(157, 78, 221, 0.3);
         }
 
         .inner-screen {
-            background: rgba(0, 15, 5, 0.95);
-            border: 1px solid rgba(0, 255, 102, 0.4);
+            background: rgba(20, 12, 40, 0.95);
+            border: 1px solid rgba(255, 204, 0, 0.4);
             border-radius: 10px;
             padding: 7px;
             position: relative;
@@ -71,7 +71,7 @@
         .signal-lock-text {
             font-size: 6.5px;
             font-family: 'Orbitron', sans-serif;
-            color: #00ff66;
+            color: #ffcc00;
             letter-spacing: 1px;
             margin-bottom: 4px;
             display: flex;
@@ -80,11 +80,11 @@
         }
         .signal-lock-text::before {
             content: '';
-            width: 4px;
-            height: 4px;
-            background: #00ff66;
+            width: 5px;
+            height: 5px;
+            background: #ffcc00;
             border-radius: 50%;
-            box-shadow: 0 0 6px #00ff66;
+            box-shadow: 0 0 6px #ffcc00;
         }
 
         .display-row {
@@ -105,35 +105,31 @@
             width: 38px;
             height: 38px;
             object-fit: contain;
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4));
-            animation: popIn 0.3s ease-out;
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+            filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.3));
+            /* Pop-up animation removed */
         }
 
         .result-badge {
             flex: 1;
-            background: linear-gradient(135deg, #00aa44, #004415);
-            border: 1.5px solid #00ff66;
+            background: linear-gradient(135deg, #ffaa00, #cc7700);
+            border: 1.5px solid #ffe680;
             border-radius: 8px;
             text-align: center;
             padding: 7px 3px;
             font-family: 'Orbitron', sans-serif;
             font-size: 13px;
             font-weight: 900;
-            color: #fff;
+            color: #1a0033;
             letter-spacing: 1px;
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.4);
-            text-shadow: 0 0 6px rgba(0,255,102,0.8);
+            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+            text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
         }
 
         .panel-footer-info {
             margin-top: 5px;
             font-size: 7px;
             font-family: 'Orbitron', sans-serif;
-            color: #88cc99;
+            color: #c77dff;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -157,8 +153,16 @@
             text-align: center;
             white-space: nowrap;
         }
-        .btn-exec { background: linear-gradient(135deg, #00ff66, #008833); color: #051407; box-shadow: 0 0 8px rgba(0,255,102,0.4); }
-        .btn-close { background: rgba(255, 255, 255, 0.1); color: #aaffcc; border: 1px solid rgba(0,255,102,0.3); }
+        .btn-exec { 
+            background: linear-gradient(135deg, #ffcc00, #ff8800); 
+            color: #120024; 
+            box-shadow: 0 0 8px rgba(255, 204, 0, 0.5); 
+        }
+        .btn-close { 
+            background: rgba(255, 255, 255, 0.1); 
+            color: #e0aaff; 
+            border: 1px solid rgba(157, 78, 221, 0.4); 
+        }
 
         /* Adjustable Floating Toggle Ball Icon */
         #floatingToggleBtn {
@@ -169,14 +173,14 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #00ff66, #004415);
-            border: 2px solid #00ff66;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.8);
+            background: radial-gradient(circle at 30% 30%, #ffcc00, #7b2cbf);
+            border: 2px solid #ffcc00;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.8);
             display: none;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            color: #000;
+            color: #fff;
             font-size: 18px;
             touch-action: none;
         }
@@ -186,7 +190,7 @@
 
     <!-- Game Web Iframe -->
     <div id="gameFrameContainer">
-        <iframe id="gameIframe" src="https://maanwin24.com/register?inviteCode=AEATD8N&from=web"></iframe>
+        <iframe id="gameIframe" src="https://dhaniwin77.com/register?inviteCode=G9W6KNN&from=web"></iframe>
     </div>
 
     <!-- Draggable Floating Toggle Ball Icon -->
@@ -206,7 +210,7 @@
             <div class="signal-lock-text">LIVE LOCKED</div>
             <div class="display-row">
                 <div class="ball-box" id="ballContainer">
-                    <div style="font-size: 16px; color: #00ff66; font-family: 'Orbitron';">?</div>
+                    <div style="font-size: 16px; color: #ffcc00; font-family: 'Orbitron';">?</div>
                 </div>
                 <div class="result-badge" id="resText">SCAN</div>
             </div>
